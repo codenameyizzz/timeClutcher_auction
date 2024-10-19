@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { FaPlus, FaUser, FaRightFromBracket } from "react-icons/fa6";
+import { FaUser, FaRightFromBracket } from "react-icons/fa6"; // Menghapus FaPlus
 
 function Navigation({ authLogin, onAuthSignOut }) {
   const { id, name, photo } = authLogin;
@@ -8,47 +8,52 @@ function Navigation({ authLogin, onAuthSignOut }) {
   // Custom styles for the navigation components
   const styles = {
     navbar: {
-      backgroundColor: "#07575B",
+      backgroundColor: "#72BF78", // Warna hijau utama
       boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
       transition: "background-color 0.3s",
+      borderRadius: "10px", // Tambahkan border-radius untuk navbar agar melengkung
     },
     navbarBrand: {
       color: "#fff",
       fontWeight: "bold",
-      fontSize: "1.5rem",
+      fontSize: "1.8rem", // Sedikit memperbesar ukuran font
+      fontFamily: "Poppins, sans-serif", // Gunakan font yang modern
     },
     button: {
-      backgroundColor: "#fff",
-      color: "#07575B",
+      backgroundColor: "#257180", // Warna tombol hijau lebih cerah
+      color: "#fff",
       border: "none",
-      borderRadius: "20px",
-      padding: "0.5rem 1rem",
+      borderRadius: "25px", // Tombol melengkung lebih besar
+      padding: "0.7rem 1.5rem", // Ukuran tombol lebih besar
       marginRight: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      fontSize: "1rem", // Perbesar ukuran teks
+      fontWeight: "600", // Tambah ketebalan font
       transition: "all 0.3s",
     },
     buttonHover: {
-      backgroundColor: "#e0e0e0",
+      backgroundColor: "#4E8C8F", // Warna hijau lebih gelap saat hover
     },
     profileImg: {
       borderRadius: "50%",
-      border: "3px solid #07575B",
+      border: "3px solid #257180", // Border hijau yang lebih mencolok
       width: "40px",
       height: "40px",
     },
     dropdownMenu: {
-      backgroundColor: "#07575B",
-      borderRadius: "5px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+      backgroundColor: "#257180",
+      borderRadius: "10px",
+      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
     },
     dropdownItem: {
       color: "#fff",
       padding: "10px 20px",
       textDecoration: "none",
+      fontFamily: "Roboto, sans-serif",
       transition: "background-color 0.2s",
     },
     dropdownItemHover: {
-      backgroundColor: "#66A5AD",
+      backgroundColor: "#5AA667",
     },
   };
 
@@ -75,7 +80,7 @@ function Navigation({ authLogin, onAuthSignOut }) {
             <ul className="navbar-nav ms-auto">
               <li className="mt-2 me-2">
                 <Link
-                  className="btn btn-light btn-sm text-dark"
+                  className="btn"
                   to="/aucations/add"
                   style={styles.button}
                   onMouseOver={(e) =>
@@ -87,7 +92,7 @@ function Navigation({ authLogin, onAuthSignOut }) {
                       styles.button.backgroundColor)
                   }
                 >
-                  <FaPlus /> Add New Aucations
+                  Add Aucations
                 </Link>
               </li>
               <li className="nav-item dropdown">
@@ -98,7 +103,7 @@ function Navigation({ authLogin, onAuthSignOut }) {
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
-                  style={{ color: "#fff" }}
+                  style={{ color: "#fff", fontSize: "1rem" }}
                 >
                   <img
                     className="nav-profile"
