@@ -39,7 +39,7 @@ function AucationInput({ onAddAucation }) {
 
   return (
     <div className="card shadow-lg" style={{ borderRadius: "0.75rem" }}>
-      <div className="card-header bg-primary text-white text-center" style={{ borderRadius: "0.75rem 0.75rem 0 0" }}>
+      <div className="card-header bg-success text-white text-center" style={{ borderRadius: "0.75rem 0.75rem 0 0" }}>
         <h3 className="card-title">Create New Aucation</h3>
       </div>
       <div className="card-body">
