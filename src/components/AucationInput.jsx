@@ -1,43 +1,71 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom"; // Import for navigation on cancel
 
-function AuctionInput({ onAddAuction }) {
+function AucationInput({ onAddAucation }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startBid, setStartBid] = useState("");
   const [closedAt, setClosedAt] = useState("");
-  const [cover, setCover] = useState(null); 
+  const [cover, setCover] = useState(null);
+  const navigate = useNavigate();
 
-  function handleOnAddAuction(e) {
-    e.preventDefault();
-
-    const fullClosedAt = `${closedAt} 23:59:59`; 
+  const handleAddAucation = (event) => {
+    event.preventDefault();
+    const fullClosureTime = `${closedAt} 23:59:59`;
 
     if (title.trim() && description.trim() && startBid && closedAt && cover) {
-      onAddAuction({
+      onAddAucation({
         title,
         description,
         start_bid: startBid,
-        closed_at: fullClosedAt,
-        cover, 
+        closed_at: fullClosureTime,
+        cover,
       });
     } else {
-      alert("Please fill in all fields, including the cover image.");
+      alert("All fields are required, including the cover image.");
     }
-  }
+  };
 
-  function handleFileChange(e) {
-    const selectedFile = e.target.files[0]; 
-    setCover(selectedFile); 
-    console.log("File selected:", selectedFile); 
-  }
+  const handleCoverChange = (event) => {
+    const file = event.target.files[0];
+    setCover(file);
+    console.log("Selected file:", file);
+  };
+
+  const handleCancel = () => {
+    navigate(-1); // Navigate back
+  };
 
   return (
-    <div className="card">
+    <div className="card shadow-lg" style={{ borderRadius: "0.75rem" }}>
+      <div className="card-header bg-primary text-white text-center" style={{ borderRadius: "0.75rem 0.75rem 0 0" }}>
+        <h3 className="card-title">Create New Aucation</h3>
+      </div>
       <div className="card-body">
-        <h3 className="ps-2">Create Auction</h3>
-        <hr />
-        <form onSubmit={handleOnAddAuction}>
+        <form onSubmit={handleAddAucation}>
+        <div className="mb-3">
+            <label htmlFor="inputCover" className="form-label">
+              Cover Image
+            </label>
+            <input
+              type="file"
+              id="inputCover"
+              accept="image/*"
+              onChange={handleCoverChange}
+              className="form-control"
+              required
+            />
+            {cover && (
+              <div className="mt-3">
+                <img
+                  src={URL.createObjectURL(cover)}
+                  alt="Cover Preview"
+                  style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                />
+              </div>
+            )}
+          </div>
           <div className="mb-3">
             <label htmlFor="inputTitle" className="form-label">
               Title
@@ -48,7 +76,7 @@ function AuctionInput({ onAddAuction }) {
               onChange={(e) => setTitle(e.target.value)}
               value={title}
               className="form-control"
-              placeholder="Enter auction title"
+              placeholder="Enter aucation title"
               required
             />
           </div>
@@ -61,8 +89,8 @@ function AuctionInput({ onAddAuction }) {
               onChange={(e) => setDescription(e.target.value)}
               value={description}
               className="form-control"
-              rows="3"
-              placeholder="Enter auction description"
+              rows="4"
+              placeholder="Enter aucation description"
               required
             ></textarea>
           </div>
@@ -93,31 +121,12 @@ function AuctionInput({ onAddAuction }) {
               required
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="inputCover" className="form-label">
-              Cover Image
-            </label>
-            <input
-              type="file"
-              id="inputCover"
-              accept="image/*"
-              onChange={handleFileChange} 
-              className="form-control"
-              required
-            />
-            {cover && (
-              <div className="mt-3">
-                <img
-                  src={URL.createObjectURL(cover)}
-                  alt="Cover Preview"
-                  style={{ width: '150px', height: 'auto', objectFit: 'cover' }} 
-                />
-              </div>
-            )}
-          </div>
-          <div className="text-end">
-            <button type="submit" className="btn btn-primary">
-              Save Auction
+          <div className="d-flex justify-content-end gap-2">
+            <button type="button" onClick={handleCancel} className="btn btn-danger">
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-success">
+              Add
             </button>
           </div>
         </form>
@@ -126,8 +135,8 @@ function AuctionInput({ onAddAuction }) {
   );
 }
 
-AuctionInput.propTypes = {
-  onAddAuction: PropTypes.func.isRequired,
+AucationInput.propTypes = {
+  onAddAucation: PropTypes.func.isRequired,
 };
 
-export default AuctionInput;
+export default AucationInput;

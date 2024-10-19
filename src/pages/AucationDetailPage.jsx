@@ -1,40 +1,53 @@
-import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import Swal from "sweetalert2"; // SweetAlert for confirmation dialogs
+import React from "react";
+
 import {
-  asyncDetailAuction,
-  asyncDeleteAuction,
-  asyncChangeAuctionCover,
+  asyncDetailAucation,
+  asyncDeleteAucation,
+  asyncChangeAucationCover,
   asyncAddBid,
   asyncDeleteBid,
-} from "../states/auctions/action";
-import AuctionDetail from "../components/AuctionDetail";
-import Swal from "sweetalert2"; // SweetAlert for confirmation dialogs
+} from "../states/aucations/action";
+import AucationDetail from "../components/AucationDetail";
 
-function AuctionDetailPage() {
+function AucationDetailPage() {
+  // Initialize hooks and variables
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { authLogin, detailAuction, loading } = useSelector((states) => ({
-    detailAuction: states.detailAuction,
-    loading: states.loading,
-    authLogin: states.authLogin,
+  // Local state for cover selection and bid amount
+  const [selectedCover, setSelectedCover] = React.useState(null);
+  const [bidAmount, setBidAmount] = React.useState("");
+
+  // Extract necessary data from Redux store
+  const { authLogin, detailAucation, loading } = useSelector((state) => ({
+    detailAucation: state.detailAucation,
+    loading: state.loading,
+    authLogin: state.authLogin,
   }));
 
-  const [selectedCover, setSelectedCover] = useState(null);
-  const [bidAmount, setBidAmount] = useState("");
-
-  useEffect(() => {
+  // Fetch aucation details when component mounts or id changes
+  React.useEffect(() => {
     if (id) {
-      dispatch(asyncDetailAuction(id));
+      dispatch(asyncDetailAucation(id));
     }
   }, [id, dispatch]);
 
+  // Calculate highest bid and user's bid
+  const highestBid = detailAucation?.bids.length
+    ? Math.max(...detailAucation.bids.map((bid) => bid.bid))
+    : null;
+
+  const myBid = detailAucation?.my_bid ? detailAucation.my_bid.bid : null;
+
+  // Handler to delete the aucation
   const handleDelete = () => {
     Swal.fire({
       title: "Hapus Lelang",
-      text: `Apakah kamu yakin ingin menghapus lelang: ${detailAuction.title}?`,
+      text: `Apakah kamu yakin ingin menghapus lelang: ${detailAucation.title}?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Ya, Tetap Hapus",
@@ -45,13 +58,13 @@ function AuctionDetailPage() {
       buttonsStyling: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(asyncDeleteAuction(id));
+        dispatch(asyncDeleteAucation(id));
         navigate("/"); // Navigate back to homepage after deletion
       }
     });
   };
 
-  // Definisikan fungsi handleCoverChange
+  // Handler for cover file selection
   const handleCoverChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -59,12 +72,13 @@ function AuctionDetailPage() {
     }
   };
 
+  // Handler to change the aucation cover
   const handleChangeCover = () => {
     if (selectedCover) {
-      dispatch(asyncChangeAuctionCover({ id, cover: selectedCover }))
+      dispatch(asyncChangeAucationCover({ id, cover: selectedCover }))
         .then(() => {
-          Swal.fire("Success", "Auction cover updated successfully", "success");
-          navigate("/"); // Kembali ke halaman utama setelah berhasil
+          Swal.fire("Success", "Aucation cover updated successfully", "success");
+          navigate("/"); // Return to the homepage after success
         })
         .catch((error) => {
           Swal.fire("Error", error.message, "error");
@@ -74,21 +88,18 @@ function AuctionDetailPage() {
     }
   };
 
+  // Handler to add a bid
   const handleAddBid = async () => {
     if (bidAmount > 0) {
-      // Tambahkan bid dan tunggu hingga selesai
       await dispatch(asyncAddBid({ id, bid: bidAmount }));
-
-      // Tampilkan pesan sukses
       Swal.fire("Success", "Bid successfully added", "success");
-
-      // Memuat ulang detail lelang untuk menampilkan data terbaru
-      await dispatch(asyncDetailAuction(id));
+      await dispatch(asyncDetailAucation(id)); // Reload aucation details
     } else {
       Swal.fire("Error", "Please enter a valid bid amount", "error");
     }
   };
 
+  // Handler to delete the user's bid
   const handleDeleteBid = () => {
     Swal.fire({
       title: "Hapus Tawaran",
@@ -108,22 +119,19 @@ function AuctionDetailPage() {
     });
   };
 
-  const highestBid = detailAuction?.bids.length
-    ? Math.max(...detailAuction.bids.map((bid) => bid.bid))
-    : null;
-
-  const myBid = detailAuction?.my_bid ? detailAuction.my_bid.bid : null;
-
+  // Display loading indicator if data is being fetched
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  // Render the component
   return (
     <section>
       <div className="container pt-1">
-        {detailAuction ? (
+        {detailAucation ? (
           <>
-            <AuctionDetail auction={detailAuction} />
+            <AucationDetail aucation={detailAucation} />
+
             {highestBid !== null && (
               <div className="mt-3">
                 <h5>Bid Tertinggi: Rp {highestBid.toLocaleString()}</h5>
@@ -142,7 +150,7 @@ function AuctionDetailPage() {
               </div>
             )}
 
-            {authLogin && detailAuction.user_id === authLogin.id ? (
+            {authLogin && detailAucation.user_id === authLogin.id ? (
               <>
                 <button
                   type="button"
@@ -152,13 +160,13 @@ function AuctionDetailPage() {
                   Hapus Lelang
                 </button>
                 <Link
-                  to={`/auctions/edit/${id}`}
+                  to={`/aucations/edit/${id}`}
                   className="btn btn-primary mt-3 ms-2"
                 >
                   Edit Lelang
                 </Link>
 
-                {/* Input untuk mengganti cover */}
+                {/* Input to change the cover */}
                 <div className="mb-3 mt-3">
                   <label htmlFor="coverInput" className="form-label">
                     Ubah Cover Lelang:
@@ -194,11 +202,11 @@ function AuctionDetailPage() {
             )}
           </>
         ) : (
-          <div>Auction not found.</div>
+          <div>Aucation not found.</div>
         )}
       </div>
     </section>
   );
 }
 
-export default AuctionDetailPage;
+export default AucationDetailPage;

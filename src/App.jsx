@@ -1,37 +1,50 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+
+// Import tindakan dan komponen yang diperlukan
 import { asyncPreloadProcess } from "./states/isPreload/action";
 import { asyncUnsetAuthLogin } from "./states/authLogin/action";
 import Loading from "./components/Loading";
 import Navigation from "./components/Navigation";
+
+// Import halaman
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
-import AuctionAddPage from "./pages/AuctionAddPage";
-import AuctionDetailPage from "./pages/AuctionDetailPage";
-import AuctionEditPage from "./pages/AuctionEditPage";
+import AucationAddPage from "./pages/AucationAddPage"; // Diubah menjadi AucationAddPage
+import AucationDetailPage from "./pages/AucationDetailPage"; // Diubah menjadi AucationDetailPage
+import AucationEditPage from "./pages/AucationEditPage"; // Diubah menjadi AucationEditPage
 
 function App() {
-  const { authLogin = null, isPreload = false } = useSelector(
-    (states) => states
-  );
+  // Mengambil state dari Redux store
+  const { authLogin = null, isPreload = false } = useSelector((state) => state);
+
   const location = useLocation();
   const dispatch = useDispatch();
+
+  // Proses preload saat aplikasi dimulai
   useEffect(() => {
     dispatch(asyncPreloadProcess());
   }, [dispatch]);
+
+  // Fungsi untuk menangani sign out
   const onAuthSignOut = () => {
     dispatch(asyncUnsetAuthLogin());
   };
+
+  // Jika preload masih berlangsung, jangan render apa pun
   if (isPreload) {
     return null;
   }
+
+  // Jika pengguna belum terautentikasi
   if (authLogin === null) {
     const activeRegister = location.pathname === "/register" ? "active" : "";
     const activeLogin = location.pathname !== "/register" ? "active" : "";
+
     return (
       <div>
         <header className="fixed-top">
@@ -66,8 +79,10 @@ function App() {
       </div>
     );
   }
+
+  // Jika pengguna sudah terautentikasi
   return (
-    <>
+    <React.Fragment>
       <div>
         <header className="fixed-top">
           <Navigation authLogin={authLogin} onAuthSignOut={onAuthSignOut} />
@@ -78,13 +93,14 @@ function App() {
             <Route path="/*" element={<NotFoundPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/users/me" element={<ProfilePage />} />
-            <Route path="/auctions/add" element={<AuctionAddPage />} />
-            <Route path="/auctions/:id" element={<AuctionDetailPage />} />
-            <Route path="/auctions/edit/:id" element={<AuctionEditPage />} />
+            <Route path="/aucations/add" element={<AucationAddPage />} />
+            <Route path="/aucations/:id" element={<AucationDetailPage />} />
+            <Route path="/aucations/edit/:id" element={<AucationEditPage />} />
           </Routes>
         </main>
       </div>
-    </>
+    </React.Fragment>
   );
 }
+
 export default App;

@@ -5,6 +5,7 @@ import { FaPlus, FaUser, FaRightFromBracket } from "react-icons/fa6";
 function Navigation({ authLogin, onAuthSignOut }) {
   const { id, name, photo } = authLogin;
 
+  // Custom styles for the navigation components
   const styles = {
     navbar: {
       backgroundColor: "#07575B",
@@ -75,7 +76,7 @@ function Navigation({ authLogin, onAuthSignOut }) {
               <li className="mt-2 me-2">
                 <Link
                   className="btn btn-light btn-sm text-dark"
-                  to="/auctions/add"
+                  to="/aucations/add"
                   style={styles.button}
                   onMouseOver={(e) =>
                     (e.currentTarget.style.backgroundColor =
@@ -86,7 +87,7 @@ function Navigation({ authLogin, onAuthSignOut }) {
                       styles.button.backgroundColor)
                   }
                 >
-                  <FaPlus /> Add New Auctions
+                  <FaPlus /> Add New Aucations
                 </Link>
               </li>
               <li className="nav-item dropdown">
@@ -155,15 +156,14 @@ function Navigation({ authLogin, onAuthSignOut }) {
   );
 }
 
-const authLoginShape = {
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  photo: PropTypes.string.isRequired,
-};
-
+// Define the shape of the authLogin prop for validation
 Navigation.propTypes = {
-  authLogin: PropTypes.shape(authLoginShape).isRequired,
+  authLogin: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    photo: PropTypes.string.isRequired,
+  }).isRequired,
   onAuthSignOut: PropTypes.func.isRequired,
 };
 
