@@ -11,6 +11,7 @@ import {
   asyncDeleteBid,
 } from "../states/aucations/action";
 import AucationDetail from "../components/AucationDetail";
+import { FaTrash } from "react-icons/fa6";
 
 function AucationDetailPage() {
   // Initialize hooks and variables
@@ -18,7 +19,6 @@ function AucationDetailPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Local state for cover selection and bid amount
   const [selectedCover, setSelectedCover] = React.useState(null);
   const [bidAmount, setBidAmount] = React.useState("");
 
@@ -46,7 +46,7 @@ function AucationDetailPage() {
   // Handler to delete the aucation
   const handleDelete = () => {
     Swal.fire({
-      title: "Hapus Lelang",
+      title: "Hapus ",
       text: `Apakah kamu yakin ingin menghapus lelang: ${detailAucation.title}?`,
       icon: "warning",
       showCancelButton: true,
@@ -119,90 +119,117 @@ function AucationDetailPage() {
     });
   };
 
-  // Display loading indicator if data is being fetched
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  // Render the component
   return (
     <section>
-      <div className="container pt-1">
+      <div className="container pt-3">
         {detailAucation ? (
           <>
-            <AucationDetail aucation={detailAucation} />
-
-            {highestBid !== null && (
-              <div className="mt-3">
-                <h5>Bid Tertinggi: Rp {highestBid.toLocaleString()}</h5>
-              </div>
-            )}
-
-            {myBid !== null && (
-              <div className="mt-3">
-                <h5>Tawaran Anda: Rp {myBid.toLocaleString()}</h5>
-                <button
-                  onClick={handleDeleteBid}
-                  className="btn btn-danger mt-2"
-                >
-                  Hapus Tawaran
-                </button>
-              </div>
-            )}
-
-            {authLogin && detailAucation.user_id === authLogin.id ? (
-              <>
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  className="btn btn-danger mt-3"
-                >
-                  Hapus Lelang
-                </button>
-                <Link
-                  to={`/aucations/edit/${id}`}
-                  className="btn btn-primary mt-3 ms-2"
-                >
-                  Edit Lelang
-                </Link>
-
-                {/* Input to change the cover */}
-                <div className="mb-3 mt-3">
-                  <label htmlFor="coverInput" className="form-label">
-                    Ubah Cover Lelang:
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    id="coverInput"
-                    onChange={handleCoverChange}
-                  />
-                  <button
-                    onClick={handleChangeCover}
-                    className="btn btn-primary mt-2"
-                  >
-                    Ubah Cover
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="mt-3">
-                <h5>Tambah Tawaran</h5>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={bidAmount}
-                  onChange={(e) => setBidAmount(e.target.value)}
-                  placeholder="Masukkan jumlah tawaran"
+            <div className="card shadow-sm mb-4" style={{ borderRadius: '12px', overflow: 'hidden' }}>
+              {/* Cover image with larger height and full width */}
+              {detailAucation.cover && (
+                <img
+                  src={detailAucation.cover}
+                  className="card-img-top"
+                  alt={detailAucation.title}
+                  style={{ objectFit: "contain", width: "100%", height: "350px" }}
                 />
-                <button onClick={handleAddBid} className="btn btn-success mt-2">
-                  Tambah Bid
-                </button>
+              )}
+              <div className="card-body">
+                {/* Title and description */}
+                <h2 className="text-primary mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  {detailAucation.title}
+                </h2>
+
+                <p className="mb-3" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  <span className="badge bg-info">Deskripsi</span>: {detailAucation.description}
+                </p>
+
+                <p className="mb-2">
+                  <span className="badge bg-primary">Starting Bid</span>: Rp {detailAucation.start_bid.toLocaleString("id-ID")}
+                </p>
+
+                <p className="mb-2">
+                  <span className="badge bg-warning">Closing Date</span>: {new Date(detailAucation.closed_at).toLocaleDateString()}
+                </p>
+
+                {/* Highest bid and user's bid */}
+                {highestBid !== null && (
+                  <div className="alert alert-info">
+                    <strong>Highest Bid: </strong> Rp {highestBid.toLocaleString()}
+                  </div>
+                )}
+
+                {myBid !== null && (
+                  <div className="alert alert-success">
+                    <strong>Tawaran Anda: </strong> Rp {myBid.toLocaleString()}
+                    <button
+                      onClick={handleDeleteBid}
+                      className="btn btn-danger btn-sm ms-2"
+                    >
+                      Delete Bid
+                    </button>
+                  </div>
+                )}
+
+                {/* Grouped Action buttons */}
+                {authLogin && detailAucation.user_id === authLogin.id ? (
+                  <div className="d-flex justify-content-between align-items-center mt-4">
+                    <div className="d-flex align-items-center">
+                      <button
+                        type="button"
+                        onClick={handleDelete}
+                        className="btn btn-danger me-2"
+                      >
+                        <FaTrash>
+                        </FaTrash> Delete 
+                      </button>
+                      <Link
+                        to={`/aucations/edit/${id}`}
+                        className="btn btn-primary me-2"
+                      >
+                        Edit
+                      </Link>
+                    </div>
+                    <div className="d-flex flex-column">
+                      <label htmlFor="coverInput" className="form-label">Ubah Cover Lelang:</label>
+                      <input
+                        type="file"
+                        className="form-control"
+                        id="coverInput"
+                        onChange={handleCoverChange}
+                      />
+                      <button
+                        onClick={handleChangeCover}
+                        className="btn btn-outline-primary mt-2"
+                      >
+                        Ubah Cover
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-3">
+                    <h5>Tambah Tawaran</h5>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={bidAmount}
+                      onChange={(e) => setBidAmount(e.target.value)}
+                      placeholder="Masukkan jumlah tawaran"
+                    />
+                    <button onClick={handleAddBid} className="btn btn-success mt-2">
+                      Add Bid
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </>
         ) : (
-          <div>Aucation not found.</div>
+          <div className="alert alert-danger">Aucation not found.</div>
         )}
       </div>
     </section>
