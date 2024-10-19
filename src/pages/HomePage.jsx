@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { asyncGetAucations } from "../states/aucations/action"; // Hapus asyncDeleteAucation jika tidak digunakan di sini
-import AucationList from "../components/AucationList";
-import Swal from "sweetalert2"; // Menggunakan SweetAlert untuk notifikasi
+import { asyncGetAucations } from "../states/aucations/action";
+import AucationItem from "../components/AucationItem"; // Import AucationItem
 
 function HomePage() {
   const dispatch = useDispatch();
   const { authLogin = null, aucations = [] } = useSelector((states) => states);
 
   useEffect(() => {
-    dispatch(asyncGetAucations()); // Ambil semua aucations ketika komponen dimuat
+    dispatch(asyncGetAucations());
   }, [dispatch]);
 
   return (
@@ -21,11 +20,13 @@ function HomePage() {
           </div>
         </div>
 
-        {aucations.length > 0 ? (
-          <AucationList aucations={aucations} />
-        ) : (
-          <p>No aucations available</p>
-        )}
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+          {aucations.map((aucation) => (
+            <div key={aucation.id} className="col">
+              <AucationItem aucation={aucation} />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

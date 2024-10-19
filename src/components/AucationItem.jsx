@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { FaTrash } from "react-icons/fa6"; // Importing the trash icon from react-icons
-import Swal from "sweetalert2"; // Importing SweetAlert2 for confirmation dialogs
+import { FaTrash } from "react-icons/fa6";
+import Swal from "sweetalert2";
 
 function AucationItem({ aucation, onDeleteAucation }) {
-  // Function to handle delete confirmation
+  // Handle delete confirmation
   const handleDelete = () => {
     Swal.fire({
       title: "Hapus Lelang",
@@ -13,56 +13,68 @@ function AucationItem({ aucation, onDeleteAucation }) {
       showCancelButton: true,
       confirmButtonText: "Ya, Tetap Hapus",
       customClass: {
-        confirmButton: "btn btn-danger me-3 mb-4", // Styling for confirm button
-        cancelButton: "btn btn-secondary mb-4", // Styling for cancel button
+        confirmButton: "btn btn-danger me-3 mb-4",
+        cancelButton: "btn btn-secondary mb-4",
       },
-      buttonsStyling: false, // Disables default SweetAlert2 button styling
+      buttonsStyling: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        onDeleteAucation(aucation.id); // Calls the delete function if confirmed
+        onDeleteAucation(aucation.id);
       }
     });
   };
 
   return (
-    <div className="card mb-3">
-      <div className="row g-0">
-        {/* Section for the cover image */}
-        {aucation.cover && (
-          <div className="col-md-4">
-            <img
-              src={aucation.cover}
-              className="img-fluid rounded-start"
-              alt={aucation.title}
-              style={{ maxHeight: "200px", objectFit: "cover" }} // Optional: limit image height
-            />
-          </div>
-        )}
-        <div className="col-md-8">
-          <div className="card-body">
-            <Link to={`/aucations/${aucation.id}`}>
-              <h5>{aucation.title}</h5>
-            </Link>
-            <p>{aucation.description}</p>
-            <p>Starting Bid: {aucation.start_bid}</p>
-            <p>
-              Closing Date:{" "}
-              {new Date(aucation.closed_at).toLocaleDateString()}
-            </p>
-            <p>Total Bids: {aucation.bids.length}</p>
-
-            {/* Only show delete button if onDeleteAucation is provided */}
-            {onDeleteAucation && (
-              <button
-                type="button"
-                onClick={handleDelete} // Calls handleDelete when clicked
-                className="btn btn-sm btn-outline-danger"
-              >
-                <FaTrash /> Hapus
-              </button>
-            )}
-          </div>
+    <div
+      className="card shadow-sm"
+      style={{
+        height: "100%",
+        minHeight: "400px",
+        borderRadius: "15px", // Increased border-radius for softer edges
+        overflow: "hidden", // Ensure the border-radius applies to the image too
+      }}
+    >
+      <div className="card-img-top" style={{ height: "250px", overflow: "hidden" }}>
+        <img
+          src={aucation.cover}
+          alt={aucation.title}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover", // Ensures image fills the area properly
+          }}
+        />
+      </div>
+      <div className="card-body d-flex flex-column" style={{ gap: "10px" }}>
+        <Link to={`/aucations/${aucation.id}`} className="flex-grow-1">
+          <h5 className="card-title" style={{ fontWeight: "bold", fontSize: "1.25rem" }}>
+            {aucation.title}
+          </h5>
+        </Link>
+        <p className="card-text flex-grow-1" style={{ fontSize: "0.9rem", color: "#555" }}>
+          {aucation.description}
+        </p>
+        <div style={{ fontSize: "0.95rem" }}>
+          <span className="badge bg-info text-dark me-2">Starting Bid</span> Rp {aucation.start_bid.toLocaleString("id-ID")}
         </div>
+        <div style={{ fontSize: "0.95rem" }}>
+          <span className="badge bg-warning text-dark me-2">Closing Date</span> {new Date(aucation.closed_at).toLocaleDateString()}
+        </div>
+        <div style={{ fontSize: "0.95rem" }}>
+          <span className="badge bg-secondary text-white me-2">Total Bids</span> {aucation.bids.length}
+        </div>
+
+        {/* Delete Button */}
+        {onDeleteAucation && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="btn btn-sm btn-outline-danger mt-auto"
+            style={{ alignSelf: "flex-end" }}
+          >
+            <FaTrash /> Hapus
+          </button>
+        )}
       </div>
     </div>
   );
@@ -75,10 +87,10 @@ AucationItem.propTypes = {
     description: PropTypes.string.isRequired,
     start_bid: PropTypes.number.isRequired,
     closed_at: PropTypes.string.isRequired,
-    cover: PropTypes.string, // URL of the cover image
-    bids: PropTypes.array, // Array of bids (added this if it's used)
+    cover: PropTypes.string,
+    bids: PropTypes.array,
   }).isRequired,
-  onDeleteAucation: PropTypes.func, // Made optional
+  onDeleteAucation: PropTypes.func,
 };
 
 export default AucationItem;
