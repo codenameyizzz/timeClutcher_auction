@@ -38,6 +38,17 @@ function AucationEditPage() {
     dispatch(asyncEditAucation({ id, title, description, start_bid: startBid, closed_at: closedAt }, navigate));
   };
 
+  const inputStyle = {
+    width: '100%',
+    padding: '12px 20px',
+    margin: '8px 0',
+    display: 'block',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    boxSizing: 'border-box',
+    transition: 'border-color 0.3s',
+  };
+
   return (
     <div className="container mt-4" style={{ maxWidth: '600px' }}>
       <div className="card" style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.1)', padding: '20px' }}>
@@ -51,7 +62,7 @@ function AucationEditPage() {
             value={title}
             onChange={handleInputChange(setTitle)}
             required
-            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+            style={inputStyle}
           />
 
           <label htmlFor="formDescription" style={{ display: 'block', marginBottom: '5px' }}>Deskripsi</label>
@@ -62,7 +73,7 @@ function AucationEditPage() {
             value={description}
             onChange={handleInputChange(setDescription)}
             required
-            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+            style={{ ...inputStyle, height: 'auto' }}
           />
 
           <label htmlFor="formStartBid" style={{ display: 'block', marginBottom: '5px' }}>Start Bid</label>
@@ -73,7 +84,7 @@ function AucationEditPage() {
             value={startBid}
             onChange={handleInputChange(setStartBid)}
             required
-            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+            style={inputStyle}
           />
 
           <label htmlFor="formClosedAt" style={{ display: 'block', marginBottom: '5px' }}>Tanggal Penutupan</label>
@@ -83,10 +94,10 @@ function AucationEditPage() {
             value={closedAt}
             onChange={handleInputChange(setClosedAt)}
             required
-            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+            style={inputStyle}
           />
 
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ textAlign: 'right', marginTop: '20px' }}>
             <button type="submit" style={{ padding: '10px 20px', backgroundColor: 'green', color: 'white', border: 'none', borderRadius: '5px' }}>
               Save
             </button>
