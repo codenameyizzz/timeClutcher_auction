@@ -14,9 +14,9 @@ import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
-import AucationAddPage from "./pages/AucationAddPage"; // Diubah menjadi AucationAddPage
-import AucationDetailPage from "./pages/AucationDetailPage"; // Diubah menjadi AucationDetailPage
-import AucationEditPage from "./pages/AucationEditPage"; // Diubah menjadi AucationEditPage
+import AucationAddPage from "./pages/AucationAddPage"; 
+import AucationDetailPage from "./pages/AucationDetailPage"; 
+import AucationEditPage from "./pages/AucationEditPage"; 
 
 function App() {
   // Mengambil state dari Redux store
