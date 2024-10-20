@@ -1,29 +1,7 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { FaTrash } from "react-icons/fa6";
-import Swal from "sweetalert2";
 
-function AucationItem({ aucation, onDeleteAucation }) {
-  // Handle delete confirmation
-  const handleDelete = () => {
-    Swal.fire({
-      title: "Hapus Lelang",
-      text: `Apakah kamu yakin ingin menghapus lelang: ${aucation.title}?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Ya, Tetap Hapus",
-      customClass: {
-        confirmButton: "btn btn-danger me-3 mb-4",
-        cancelButton: "btn btn-secondary mb-4",
-      },
-      buttonsStyling: false,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        onDeleteAucation(aucation.id);
-      }
-    });
-  };
-
+function AucationItem({ aucation }) {
   return (
     <div
       className="card shadow-sm"
@@ -64,17 +42,7 @@ function AucationItem({ aucation, onDeleteAucation }) {
           <span className="badge bg-secondary text-white me-2">Total Bids</span> {aucation.bids.length}
         </div>
 
-        {/* Delete Button */}
-        {onDeleteAucation && (
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="btn btn-sm btn-outline-danger mt-auto"
-            style={{ alignSelf: "flex-end" }}
-          >
-            <FaTrash /> Hapus
-          </button>
-        )}
+       
       </div>
     </div>
   );
