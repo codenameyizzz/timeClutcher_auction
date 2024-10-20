@@ -88,16 +88,26 @@ function AucationDetailPage() {
     }
   };
 
-  // Handler to add a bid
-  const handleAddBid = async () => {
-    if (bidAmount > 0) {
-      await dispatch(asyncAddBid({ id, bid: bidAmount }));
-      Swal.fire("Success", "Bid successfully added", "success");
-      await dispatch(asyncDetailAucation(id)); // Reload aucation details
-    } else {
-      Swal.fire("Error", "Please enter a valid bid amount", "error");
-    }
-  };
+
+// Handler to add a bid
+const handleAddBid = async () => {
+  const bidValue = parseFloat(bidAmount);
+
+  if (bidValue <= 0) {
+    Swal.fire("Error", "Please enter a valid bid amount", "error");
+  } else if (detailAucation.bids.length === 0 && bidValue < detailAucation.start_bid) {
+    // Jika belum ada bid dan bid lebih kecil dari start bid
+    Swal.fire("Error", `Your bid must be higher than the starting bid of Rp ${detailAucation.start_bid.toLocaleString("id-ID")}`, "error");
+  } else if (highestBid !== null && bidValue <= highestBid) {
+    // Jika ada bid dan nilai bid lebih kecil atau sama dengan bid tertinggi
+    Swal.fire("Error", `Your bid must be higher than the current highest bid of Rp ${highestBid.toLocaleString("id-ID")}`, "error");
+  } else {
+    await dispatch(asyncAddBid({ id, bid: bidValue }));
+    Swal.fire("Success", "Bid successfully added", "success");
+    await dispatch(asyncDetailAucation(id)); // Reload aucation details
+  }
+};
+
 
   // Handler to delete the user's bid
   const handleDeleteBid = () => {
