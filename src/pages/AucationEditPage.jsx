@@ -41,7 +41,7 @@ function AucationEditPage() {
   return (
     <div className="container mt-4" style={{ maxWidth: '600px' }}>
       <div className="card" style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.1)', padding: '20px' }}>
-        <h2 style={{ textAlign: 'center' }}>Edit Auction</h2>
+        <h2 style={{ textAlign: 'center' }}>Update Aucation</h2>
         <form onSubmit={handleSubmit}>
           <label htmlFor="formTitle" style={{ display: 'block', marginBottom: '5px' }}>Judul</label>
           <input
