@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncGetAucations } from "../states/aucations/action";
 import AucationItem from "../components/AucationItem";

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { asyncAddAucation, addAucationActionCreator } from '../states/aucations/action'; // Import actions for Aucation
 import AucationInput from '../components/AucationInput'; // Input form component for Aucation
