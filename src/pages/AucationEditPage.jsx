@@ -1,37 +1,25 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
-import {
-  asyncDetailAucation,
-  asyncEditAucation,
-} from "../states/aucations/action";
+import { asyncDetailAucation, asyncEditAucation } from "../states/aucations/action";
 
 function AucationEditPage() {
-  // Inisialisasi dispatch dan navigate
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-  // Dapatkan id dari URL
   const { id } = useParams();
-
-  // Ambil detailAucation dari Redux store
   const { detailAucation } = useSelector((state) => state);
 
-  // State lokal untuk form input
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startBid, setStartBid] = useState("");
   const [closedAt, setClosedAt] = useState("");
 
-  // Ambil detail aucation saat komponen dimuat
   useEffect(() => {
     if (id) {
       dispatch(asyncDetailAucation(id));
     }
   }, [id, dispatch]);
 
-  // Update state lokal saat detailAucation berubah
   useEffect(() => {
     if (detailAucation) {
       setTitle(detailAucation.title);
@@ -41,71 +29,70 @@ function AucationEditPage() {
     }
   }, [detailAucation]);
 
-  // Fungsi untuk menangani perubahan input
   const handleInputChange = (setter) => (event) => {
     setter(event.target.value);
   };
 
-  // Fungsi untuk submit form
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(
-      asyncEditAucation(
-        {
-          id,
-          title,
-          description,
-          start_bid: startBid,
-          closed_at: closedAt,
-        },
-        navigate
-      )
-    );
+    dispatch(asyncEditAucation({ id, title, description, start_bid: startBid, closed_at: closedAt }, navigate));
   };
 
   return (
-    <div className="container pt-1">
-      <h2>Edit Aucation</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Judul</label>
+    <div className="container mt-4" style={{ maxWidth: '600px' }}>
+      <div className="card" style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.1)', padding: '20px' }}>
+        <h2 style={{ textAlign: 'center' }}>Edit Auction</h2>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="formTitle" style={{ display: 'block', marginBottom: '5px' }}>Judul</label>
           <input
+            id="formTitle"
             type="text"
-            className="form-control"
+            placeholder="Masukkan judul auction"
             value={title}
             onChange={handleInputChange(setTitle)}
+            required
+            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
           />
-        </div>
-        <div className="mb-3">
-          <label>Deskripsi</label>
+
+          <label htmlFor="formDescription" style={{ display: 'block', marginBottom: '5px' }}>Deskripsi</label>
           <textarea
-            className="form-control"
+            id="formDescription"
+            rows="3"
+            placeholder="Masukkan deskripsi auction"
             value={description}
             onChange={handleInputChange(setDescription)}
+            required
+            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
           />
-        </div>
-        <div className="mb-3">
-          <label>Start Bid</label>
+
+          <label htmlFor="formStartBid" style={{ display: 'block', marginBottom: '5px' }}>Start Bid</label>
           <input
+            id="formStartBid"
             type="number"
-            className="form-control"
+            placeholder="Masukkan nilai start bid"
             value={startBid}
             onChange={handleInputChange(setStartBid)}
+            required
+            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
           />
-        </div>
-        <div className="mb-3">
-          <label>Tanggal Penutupan</label>
+
+          <label htmlFor="formClosedAt" style={{ display: 'block', marginBottom: '5px' }}>Tanggal Penutupan</label>
           <input
+            id="formClosedAt"
             type="datetime-local"
-            className="form-control"
             value={closedAt}
             onChange={handleInputChange(setClosedAt)}
+            required
+            style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
           />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Simpan Perubahan
-        </button>
-      </form>
+
+          <div style={{ textAlign: 'right' }}>
+            <button type="submit" style={{ padding: '10px 20px', backgroundColor: 'green', color: 'white', border: 'none', borderRadius: '5px' }}>
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
